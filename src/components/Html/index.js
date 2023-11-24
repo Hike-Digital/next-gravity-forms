@@ -21,7 +21,7 @@ const Html = ({ fieldData, name, wrapClassName, ...wrapProps }) => {
         cssClass
       )}
     >
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <div data-testid="html_field_component" dangerouslySetInnerHTML={{ __html: content }} />
     </InputWrapper>
   );
 };
