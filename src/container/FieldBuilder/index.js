@@ -4,6 +4,7 @@ import Captcha from "../../components/Captcha";
 import Html from "../../components/Html";
 import Input from "../../components/Input";
 import Email from "../../components/Email";
+import Name from "../../components/Name";
 import Multiselect from "../../components/Multiselect";
 import Select from "../../components/Select";
 import SelectorList from "../../components/SelectorList";
@@ -85,7 +86,7 @@ const FieldBuilder = ({
           <Captcha
             captchaTheme={captchaTheme}
             fieldData={fieldData}
-            gfId={id}
+            gfId={databaseId}
             key={id}
             name={inputName}
             ref={preOnSubmit}
@@ -98,7 +99,7 @@ const FieldBuilder = ({
           <Html
             fieldData={fieldData}
             key={id}
-            gfId={id}
+            gfId={databaseId}
             name={inputName}
             wrapClassName={inputWrapperClass}
             wrapId={wrapId}
@@ -114,7 +115,7 @@ const FieldBuilder = ({
           <Input
             fieldData={fieldData}
             key={id}
-            gfId={id}
+            gfId={databaseId}
             name={inputName}
             defaultValue={defaultValue}
             wrapClassName={inputWrapperClass}
@@ -126,7 +127,19 @@ const FieldBuilder = ({
           <Email
             fieldData={fieldData}
             key={id}
-            gfId={id}
+            gfId={databaseId}
+            name={inputName}
+            defaultValue={defaultValue}
+            wrapClassName={inputWrapperClass}
+            wrapId={wrapId}
+          />
+        );
+      case "NAME":
+        return (
+          <Name
+            fieldData={fieldData}
+            key={id}
+            gfId={databaseId}
             name={inputName}
             defaultValue={defaultValue}
             wrapClassName={inputWrapperClass}
@@ -139,7 +152,7 @@ const FieldBuilder = ({
             fieldData={fieldData}
             defaultValue={defaultValue}
             key={id}
-            gfId={id}
+            gfId={databaseId}
             name={inputName}
             wrapClassName={inputWrapperClass}
             wrapId={wrapId}
@@ -150,7 +163,7 @@ const FieldBuilder = ({
           <Select
             fieldData={fieldData}
             key={id}
-            gfId={id}
+            gfId={databaseId}
             name={inputName}
             wrapClassName={inputWrapperClass}
             wrapId={wrapId}
@@ -161,7 +174,7 @@ const FieldBuilder = ({
           <Multiselect
             fieldData={fieldData}
             key={id}
-            gfId={id}
+            gfId={databaseId}
             name={inputName}
             wrapClassName={inputWrapperClass}
             wrapId={wrapId}
@@ -173,7 +186,7 @@ const FieldBuilder = ({
           <SelectorList
             fieldData={fieldData}
             key={id}
-            gfId={id}
+            gfId={databaseId}
             name={inputName}
             wrapClassName={inputWrapperClass}
             wrapId={wrapId}

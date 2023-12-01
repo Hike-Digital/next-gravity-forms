@@ -3,12 +3,14 @@ import { useFormContext } from "react-hook-form";
 import strings from "../../utils/strings";
 import getFieldError from "../../utils/getFieldError";
 import InputWrapper from "../InputWrapper";
-import { Input, ConditionalWrapper } from "../General";
-import ConfirmationWrapper from "./ConfirmationWrapper";
+import { Input, ConditionalWrapper, InputFieldWrapper } from "../General";
 
 const Email = ({ defaultValue, fieldData, name, ...wrapProps }) => {
-  const { isRequired, maxLength, placeholder, inputs, subLabelPlacement } = fieldData;
+  const { isRequired, maxLength, placeholder, inputs, subLabelPlacement, id } = fieldData;
   const [emailField, confirmEmailField] = inputs || [];
+  const { gfId } = wrapProps;
+
+  console.log({ wrapProps });
 
   const {
     register,
@@ -26,15 +28,15 @@ const Email = ({ defaultValue, fieldData, name, ...wrapProps }) => {
       <ConditionalWrapper // render only when there is confirmed field
         condition={Boolean(confirmEmailField)}
         wrapper={(children) => (
-          <ConfirmationWrapper
-            name={name}
+          <InputFieldWrapper
+            {...emailField}
+            name={`input_${gfId}_${id}`}
             subLabelPlacement={subLabelPlacement}
             id={1}
             className="ginput_left"
-            {...emailField}
           >
             {children}
-          </ConfirmationWrapper>
+          </InputFieldWrapper>
         )}
       >
         <Input
@@ -57,16 +59,17 @@ const Email = ({ defaultValue, fieldData, name, ...wrapProps }) => {
             },
           })}
           placeholder={emailField?.placeholder || placeholder}
+          id={`input_${gfId}_${id}`}
         />
       </ConditionalWrapper>
 
       {confirmEmailField && (
-        <ConfirmationWrapper
-          name={`${name}_2`}
-          subLabelPlacement={subLabelPlacement}
-          id={2}
-          className="ginput_right"
+        <InputFieldWrapper
           {...confirmEmailField}
+          name={`input_${gfId}_${id}_2`}
+          subLabelPlacement={subLabelPlacement}
+          id={id}
+          className="ginput_right"
         >
           <Input
             name={`${name}_2`}
@@ -82,8 +85,9 @@ const Email = ({ defaultValue, fieldData, name, ...wrapProps }) => {
               },
             })}
             placeholder={confirmEmailField?.placeholder || placeholder}
+            id={`input_${gfId}_${id}_2`}
           />
-        </ConfirmationWrapper>
+        </InputFieldWrapper>
       )}
     </InputWrapper>
   );
@@ -102,6 +106,7 @@ Email.propTypes = {
     size: PropTypes.string,
     subLabelPlacement: PropTypes.string,
     inputs: PropTypes.array,
+    id: PropTypes.number,
   }),
   value: PropTypes.string,
   name: PropTypes.string,

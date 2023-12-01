@@ -1,24 +1,20 @@
 import classnames from "classnames";
 import PropTypes from "prop-types";
 
-const ConfirmationWrapper = ({
+const InputFieldWrapper = ({
   subLabelPlacement,
   children,
   label,
   customLabel,
   name,
   className,
-  id,
 }) => {
   const sub_label_class =
     subLabelPlacement == "hidden_label" ? "hidden_sub_label screen-reader-text" : "";
 
   return (
     <>
-      <span
-        className={classnames(className, "gform-grid-col")}
-        id={`${name}_${id}_container`}
-      >
+      <span className={classnames(className, "gform-grid-col")} id={`${name}_container`}>
         {subLabelPlacement === "ABOVE" && (
           // eslint-disable-next-line jsx-a11y/label-has-associated-control
           <label
@@ -49,9 +45,9 @@ const ConfirmationWrapper = ({
   );
 };
 
-export default ConfirmationWrapper;
+export default InputFieldWrapper;
 
-ConfirmationWrapper.propTypes = {
+InputFieldWrapper.propTypes = {
   subLabelPlacement: PropTypes.string,
   children: PropTypes.node,
   label: PropTypes.string,

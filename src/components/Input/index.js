@@ -19,12 +19,13 @@ const standardType = (type) => {
 
 const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
   const { type: typeUpper } = fieldData;
+  const { gfId } = wrapProps;
 
   const type = valueToLowerCase(typeUpper);
 
   const inputType = standardType(type);
 
-  const { inputMaskValue, isRequired, maxLength } = fieldData;
+  const { inputMaskValue, isRequired, maxLength, id } = fieldData;
 
   const {
     register,
@@ -45,6 +46,7 @@ const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
         fieldData={{ ...fieldData, type: valueToLowerCase(inputType) }}
         errors={errors}
         name={name}
+        id={`${valueToLowerCase(inputType)}_${gfId}_${id}`}
         {...register(name, {
           required: isRequired && strings.errors.required,
           maxlength: {
@@ -75,6 +77,7 @@ InputField.propTypes = {
     isRequired: PropTypes.bool,
     type: PropTypes.string,
     size: PropTypes.string,
+    id: PropTypes.number,
   }),
   value: PropTypes.string,
   name: PropTypes.string,
