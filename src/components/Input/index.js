@@ -19,10 +19,15 @@ const standardType = (type) => {
 };
 
 const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
-  const { inputMaskValue, isRequired, maxLength, type } = fieldData;
+  const { inputMaskValue, isRequired, maxLength, type, phoneFormat } =
+    fieldData;
 
   const regex = inputMaskValue ? new RegExp(inputMaskValue) : false;
-  const inputType = standardType(type);
+  const inputType = standardType(valueToLowerCase(type));
+
+  // @TODO: based on chosen format, we should change the UI and behaviour of the input field.
+  const isStandardPhoneField =
+    phoneFormat === "STANDARD" && inputType === "tel";
 
   const {
     register,
@@ -45,7 +50,7 @@ const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
           required: isRequired && strings.errors.required,
           maxLength: maxLength > 0 && {
             value: maxLength,
-            message: `${strings.errors.maxChar.front}  ${maxLength} ${strings.errors.maxChar.back}`,
+            message: `${strings.errors.maxChar.front} ${maxLength} ${strings.errors.maxChar.back}`,
           },
           pattern: {
             value: regex,
