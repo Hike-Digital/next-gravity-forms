@@ -22,15 +22,22 @@ const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
   const { inputMaskValue, isRequired, maxLength, type, phoneFormat } =
     fieldData;
 
-  const regex = inputMaskValue ? new RegExp(inputMaskValue) : false;
   const inputType = standardType(valueToLowerCase(type));
-
   // @TODO: based on chosen format, we should change the UI and behaviour of the input field.
+  // @TODO2: make sure we not only make sure the input is numeric, but that it also follows this pattern: (###) ###-####
   const isStandardPhoneField =
     phoneFormat === "STANDARD" && inputType === "tel";
 
+  const regex = inputMaskValue ? new RegExp(inputMaskValue) : false;
+
+  const handleInput = (e) => {
+    const numericValue = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+    setValue(name, numericValue);
+  };
+
   const {
     register,
+    setValue,
     formState: { errors },
   } = useFormContext();
 
@@ -46,6 +53,7 @@ const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
         fieldData={{ ...fieldData, type: valueToLowerCase(inputType) }}
         errors={errors}
         name={name}
+        {...(isStandardPhoneField ? { onInput: handleInput } : {})}
         {...register(name, {
           required: isRequired && strings.errors.required,
           maxLength: maxLength > 0 && {

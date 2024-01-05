@@ -6,6 +6,7 @@ const strings = {
     unknownError: "An unknown error occured.",
     required: "This field is required.",
     emailsDontmatch: "Your emails do not match.",
+    phoneFormat: "Phone format: (###) ###-####",
     pattern: {
       email:
         "The email address entered is invalid, please check the formatting (e.g. email@domain.com).",

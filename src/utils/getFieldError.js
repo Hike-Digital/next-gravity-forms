@@ -4,16 +4,16 @@
 import strings from "./strings";
 import { valueToLowerCase } from "./helpers";
 
-function getFieldError(props) {
-  const type = valueToLowerCase(props.type || props.typeUpper);
+function getFieldError({ type, typeUpper, errorMessage, inputMaskValue }) {
+  const patternType = valueToLowerCase(type || typeUpper);
 
-  if (props.errorMessage) {
-    return props.errorMessage;
-  }
+  if (errorMessage) return errorMessage;
 
   // if field has inputMask return static error
-  if (props.inputMaskValue) {
-    return strings.errors.pattern[type] || strings.errors.pattern.default;
+  if (inputMaskValue) {
+    return (
+      strings.errors.pattern[patternType] || strings.errors.pattern.default
+    );
   }
 
   return "";
