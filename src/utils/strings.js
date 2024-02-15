@@ -6,6 +6,9 @@ const strings = {
     unknownError: "An unknown error occured.",
     required: "This field is required.",
     emailsDontmatch: "Your emails do not match.",
+    wrongRangeMin: "Please enter a number greater than or equal to {{min}}.",
+    wrongRangeMax: "Please enter a number less than or equal to {{max}}.",
+    wrongRangeBoth: "Please enter a number from {{min}} to {{max}}.",
     pattern: {
       email:
         "The email address entered is invalid, please check the formatting (e.g. email@domain.com).",
@@ -16,6 +19,11 @@ const strings = {
       front: "Need more than",
       back: "characters.",
     },
+  },
+  honeypot:
+    "This field is for validation purposes and should be left unchanged.",
+  multiselect: {
+    placeholder: "Click to select...",
   },
 };
 
