@@ -5,14 +5,16 @@ import { useFormContext } from "react-hook-form";
 import InputWrapper from "../InputWrapper";
 import { valueToLowerCase } from "../../utils/helpers";
 import { useSettings } from "../../providers/SettingsContext";
+import SelectDeselectButton from "./SelectDeselectButton";
 
 // TODO: Enable Select All Choice
-const SelectorList = ({ fieldData, name, ...wrapProps }) => {
+const SelectorList = ({ presetValue, fieldData, name, ...wrapProps }) => {
   const { strings } = useSettings();
   const {
     id,
     choices,
     cssClass,
+    hasSelectAll,
     isRequired,
     size,
     type: typeUpper,
@@ -23,29 +25,37 @@ const SelectorList = ({ fieldData, name, ...wrapProps }) => {
   const {
     register,
     formState: { errors },
+    setValue,
   } = useFormContext();
 
-  // Due to checkboxes and radios are seen in GraphQL each choice is given an
-  // error parameter. However in practice only one error matters.
-  // So we check to see if one error exists across all choices.
-  const error = errors[name]?.filter(({ message }) => {
-    if (message) {
-      return true;
+  // Determines if a field should be checked by default
+  const getDefaultChecked = (value, isSelected) => {
+    if (type === "checkbox") {
+      // both preset value and default can be displayed
+      return value === presetValue || isSelected;
+    } else if (type === "radio") {
+      const isPresetValueInChoices = choices.some(
+        (choice) => choice.value === presetValue
+      );
+      // preset value overrides default in priority
+      return isPresetValueInChoices ? value === presetValue : isSelected;
     }
-  })?.[0];
+    return false;
+  };
 
   return (
     <InputWrapper
-      errors={error}
+      errors={errors?.[name]}
       inputData={fieldData}
       labelFor={name}
       {...wrapProps}
     >
-      <ul className={`gfield_${type}`} id={name}>
+      <div className={`gfield_${type}`} id={name}>
         {choices.map(({ isSelected, text, value }, index) => {
           const choiceID = index + 1;
+          const defaultChecked = getDefaultChecked(value, isSelected);
           return (
-            <li key={`${name}-${index + 1}`}>
+            <div key={`${name}-${index + 1}`}>
               <input
                 className={classnames(
                   `gravityform__field__input__${type}`,
@@ -53,15 +63,12 @@ const SelectorList = ({ fieldData, name, ...wrapProps }) => {
                   cssClass,
                   valueToLowerCase(size)
                 )}
-                defaultChecked={isSelected}
+                defaultChecked={defaultChecked}
                 id={`${name}_${choiceID}`}
-                name={`${name}${type === "checkbox" ? `.${choiceID}` : ""}`}
-                {...register(
-                  `${name}${type === "checkbox" ? `.${choiceID}` : ""}`,
-                  {
-                    required: isRequired && strings.errors.required,
-                  }
-                )}
+                name={name}
+                {...register(name, {
+                  required: isRequired && strings.errors.required,
+                })}
                 type={type}
                 value={value}
               />
@@ -70,10 +77,18 @@ const SelectorList = ({ fieldData, name, ...wrapProps }) => {
                 htmlFor={`${name}_${choiceID}`}
                 dangerouslySetInnerHTML={{ __html: text }}
               />
-            </li>
+            </div>
           );
         })}
-      </ul>
+        {hasSelectAll && (
+          <SelectDeselectButton
+            id={id}
+            name={name}
+            choices={choices}
+            setValue={setValue}
+          />
+        )}
+      </div>
     </InputWrapper>
   );
 };
@@ -81,6 +96,7 @@ const SelectorList = ({ fieldData, name, ...wrapProps }) => {
 export default SelectorList;
 
 SelectorList.propTypes = {
+  presetValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   fieldData: PropTypes.shape({
     choices: PropTypes.array,
     cssClass: PropTypes.string,
