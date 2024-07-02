@@ -20,33 +20,23 @@ const standardType = (type) => {
   }
 };
 
-const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
+const InputField = ({ presetValue, fieldData, name, ...wrapProps }) => {
   const { strings } = useSettings();
+
   const {
     inputMaskValue,
     isRequired,
     maxLength,
-    numberFormat,
     type,
+    size,
     rangeMax,
     rangeMin,
     errorMessage,
-    size,
+    defaultValue,
   } = fieldData;
 
   const regex = inputMaskValue ? new RegExp(inputMaskValue) : false;
-
-  const generateInputType = (type, numberFormat) => {
-    if (type === "NUMBER") {
-      if (numberFormat !== "DECIMAL_DOT") {
-        return "TEXT";
-      }
-
-      return type;
-    }
-
-    return standardType(type);
-  };
+  const inputType = standardType(type);
 
   const {
     register,
@@ -66,11 +56,8 @@ const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
       {...wrapProps}
     >
       <Input
-        defaultValue={defaultValue}
-        fieldData={{
-          ...fieldData,
-          type: valueToLowerCase(generateInputType(type, numberFormat)),
-        }}
+        defaultValue={presetValue ?? defaultValue}
+        fieldData={{ ...fieldData, type: valueToLowerCase(inputType) }}
         className={classnames(valueToLowerCase(size), {
           gform_hidden: type === "HIDDEN",
         })}
@@ -96,7 +83,7 @@ const InputField = ({ defaultValue, fieldData, name, ...wrapProps }) => {
 export default InputField;
 
 InputField.propTypes = {
-  defaultValue: PropTypes.string,
+  presetValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   fieldData: PropTypes.shape({
     cssClass: PropTypes.string,
     inputMaskValue: PropTypes.string,
