@@ -7,6 +7,7 @@ import getFieldError from "../../utils/getFieldError";
 import InputWrapper from "../InputWrapper";
 import { Input } from "../General";
 import { useSettings } from "../../providers/SettingsContext";
+import { useRangeUtilities } from "./helpers";
 
 const standardType = (type) => {
   switch (type) {
@@ -21,8 +22,18 @@ const standardType = (type) => {
 
 const InputField = ({ presetValue, fieldData, name, ...wrapProps }) => {
   const { strings } = useSettings();
-  const { inputMaskValue, isRequired, maxLength, type, size, defaultValue } =
-    fieldData;
+
+  const {
+    inputMaskValue,
+    isRequired,
+    maxLength,
+    type,
+    size,
+    rangeMax,
+    rangeMin,
+    defaultValue,
+    errorMessage,
+  } = fieldData;
 
   const regex = inputMaskValue ? new RegExp(inputMaskValue) : false;
   const inputType = standardType(type);
@@ -31,6 +42,11 @@ const InputField = ({ presetValue, fieldData, name, ...wrapProps }) => {
     register,
     formState: { errors },
   } = useFormContext();
+
+  const { rangeValidation } = useRangeUtilities({
+    range: { minValue: rangeMin, maxValue: rangeMax },
+    customErrorText: errorMessage,
+  });
 
   return (
     <InputWrapper
@@ -48,7 +64,7 @@ const InputField = ({ presetValue, fieldData, name, ...wrapProps }) => {
         errors={errors}
         name={name}
         {...register(name, {
-          required: isRequired && strings.errors.required,
+          required: isRequired && (errorMessage || strings.errors.required),
           maxLength: maxLength > 0 && {
             value: maxLength,
             message: `${strings.errors.maxChar.front}  ${maxLength} ${strings.errors.maxChar.back}`,
@@ -57,6 +73,7 @@ const InputField = ({ presetValue, fieldData, name, ...wrapProps }) => {
             value: regex,
             message: regex && getFieldError(fieldData, strings),
           },
+          ...rangeValidation,
         })}
       />
     </InputWrapper>
@@ -75,6 +92,10 @@ InputField.propTypes = {
     isRequired: PropTypes.bool,
     type: PropTypes.string,
     size: PropTypes.string,
+    defaultValue: PropTypes.string,
+    errorMessage: PropTypes.string,
+    rangeMax: PropTypes.number,
+    rangeMin: PropTypes.number,
   }),
   value: PropTypes.string,
   name: PropTypes.string,

@@ -1,5 +1,4 @@
 import React from "react";
-import classnames from "classnames";
 import PropTypes from "prop-types";
 import { valueToLowerCase } from "../../utils/helpers";
 import { forwardRef } from "react";
@@ -8,7 +7,7 @@ const Input = forwardRef(function Input(
   { fieldData, defaultValue, errors, name, ...props },
   ref
 ) {
-  const { cssClass, isRequired, maxLength, placeholder, size, type } =
+  const { isRequired, maxLength, placeholder, type, rangeMin, rangeMax } =
     fieldData;
 
   // substr default value if there is maxLength set
@@ -25,6 +24,8 @@ const Input = forwardRef(function Input(
       defaultValue={defaultFieldValue}
       id={name}
       maxLength={maxLength || 524288} // 524288 = 512kb, avoids invalid prop type error if maxLength is undefined.
+      min={rangeMin}
+      max={rangeMax}
       name={name}
       placeholder={placeholder}
       type={valueToLowerCase(type)}
@@ -42,6 +43,8 @@ Input.propTypes = {
     isRequired: PropTypes.bool,
     type: PropTypes.string,
     size: PropTypes.string,
+    rangeMin: PropTypes.number,
+    rangeMax: PropTypes.number,
   }),
   name: PropTypes.string,
   errors: PropTypes.object,

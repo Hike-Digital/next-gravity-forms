@@ -9,6 +9,7 @@ import Select from "../../components/Select";
 import SelectorList from "../../components/SelectorList";
 import Textarea from "../../components/Textarea";
 import Section from "../../components/Section";
+import Fileupload from "../../components/Fileupload";
 import DateField from "../../components/Date";
 import Honeypot from "../../components/Honeypot";
 import Name from "../../components/Name";
@@ -19,7 +20,6 @@ import { getFieldWidthClass } from "../../utils/getFieldWidthClass";
 const FieldBuilder = ({
   databaseId,
   formFields,
-  formLoading,
   preOnSubmit,
   presetValues,
   settings,
@@ -42,7 +42,7 @@ const FieldBuilder = ({
       visibility,
     } = field;
 
-    let inputWrapperClass = classnames(
+    const inputWrapperClass = classnames(
       "gfield",
       "gfield--type-" + valueToLowerCase(type),
       field.cssClass,
@@ -71,9 +71,7 @@ const FieldBuilder = ({
     );
 
     const wrapId = `field_${databaseId}_${id}`;
-
-    //TODO: Should this match GF version "input_form.id_input.id"
-    const name = `input_${field.id}`;
+    const name = `input_${id}`;
 
     const presetValue = presetValues?.[inputName];
 
@@ -147,6 +145,18 @@ const FieldBuilder = ({
       case "EMAIL":
         return (
           <Email
+            fieldData={field}
+            key={id}
+            gfId={id}
+            name={name}
+            presetValue={presetValue}
+            wrapClassName={inputWrapperClass}
+            wrapId={wrapId}
+          />
+        );
+      case "FILEUPLOAD":
+        return (
+          <Fileupload
             fieldData={field}
             key={id}
             gfId={id}

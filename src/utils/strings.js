@@ -6,6 +6,9 @@ const strings = {
     unknownError: "An unknown error occured.",
     required: "This field is required.",
     emailsDontmatch: "Your emails do not match.",
+    wrongRangeMin: "Please enter a number greater than or equal to {{min}}.",
+    wrongRangeMax: "Please enter a number less than or equal to {{max}}.",
+    wrongRangeBoth: "Please enter a number from {{min}} to {{max}}.",
     pattern: {
       email:
         "The email address entered is invalid, please check the formatting (e.g. email@domain.com).",
@@ -24,7 +27,17 @@ const strings = {
         invalid: "Please enter a valid date in the format ({{format}}).",
       },
     },
-    name: "Please complete the following fields: {{fields}}",
+    fileupload: {
+      exceedsSizeLimit: "File exceeds size limit. Maximum file size: {{max}}MB",
+      typeNotAllowed:
+        "The uploaded file type is not allowed. Must be one of the following: {{types}}",
+    },
+    multiFileUpload: {
+      exceedsSizeLimit: "{{name}} - File exceeds size limit",
+      typeNotAllowed:
+        "{{name}} - This type of file is not allowed. Must be one of the following: {{types}}",
+      maxFiles: "Maximum number of files reached",
+    },
   },
   datepicker: {
     days: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
@@ -63,6 +76,18 @@ const strings = {
   multiselect: {
     placeholder: "Click to select...",
   },
+  fileupload: {
+    acceptedFiles: "Accepted file types: {{types}}",
+    maxFileSize: "Max. file size: {{max}}",
+    maxFiles: "Max. files: {{max}}",
+    deleteFile: "Delete this file: {{name}}",
+    multiFileUpload: {
+      drop: "Drop files here or ",
+      select: "Select files",
+    },
+  },
+  loading: "Loading...",
+  submit: "Submit",
 };
 
 export default strings;
