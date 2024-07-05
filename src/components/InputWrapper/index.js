@@ -27,7 +27,7 @@ const InputWrapper = ({
   errorMessage,
 }) => {
   const joinedLabel = `${label}${
-    isRequired ? '<span class="gfield_required">*</span>' : ""
+    isRequired ? '<span className="gfield_required">*</span>' : ""
   }`;
 
   const Label = inputs?.length > 0 ? "legend" : "label"; // if field has inputs, we render label as <legend>
@@ -55,7 +55,9 @@ const InputWrapper = ({
           dangerouslySetInnerHTML={{ __html: joinedLabel }}
         />
       )}
-      {outputDescription(description, descriptionPlacement, "above", errors)}
+      {description &&
+        valueToLowerCase(descriptionPlacement) == "above" &&
+        outputDescription(description, wrapId)}
       <div
         className={classnames(
           `ginput_container ginput_container_${valueToLowerCase(type)}`,
@@ -78,7 +80,10 @@ const InputWrapper = ({
           />
         )}
       </div>
-      {outputDescription(description, descriptionPlacement, "below", errors)}
+      {description &&
+        (valueToLowerCase(descriptionPlacement) == "below" ||
+          valueToLowerCase(descriptionPlacement) == "inherit") &&
+        outputDescription(description, wrapId)}
       {isNonEmptyObject(errors) && (
         <div
           aria-live="polite"
@@ -95,7 +100,7 @@ const InputWrapper = ({
 };
 
 const maxLengthSentence = (length, type) => {
-  let word = type === "number" ? "numbers" : "characters";
+  const word = type === "number" ? "numbers" : "characters";
   return length && ` (maxiumum ${length} ${word})`;
 };
 
@@ -112,8 +117,10 @@ InputWrapper.propTypes = {
     isRequired: PropTypes.bool,
     maxLength: PropTypes.number,
     type: PropTypes.string,
+    inputs: PropTypes.array,
   }),
   labelFor: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   wrapClassName: PropTypes.string,
+  ginputClassName: PropTypes.string,
   wrapId: PropTypes.string,
 };

@@ -18,12 +18,14 @@ const Select = ({ presetValue, fieldData, name, ...wrapProps }) => {
     placeholder,
     hasEnhancedUI,
     type,
+    errorMessage,
+    defaultValue: fieldDefaultValue,
   } = fieldData;
 
   const isMultiselectField = valueToLowerCase(type) === "multiselect";
 
   // if there is placeholder we add it as first option with no value set
-  let options = [
+  const options = [
     ...(placeholder
       ? [
           {
@@ -43,7 +45,12 @@ const Select = ({ presetValue, fieldData, name, ...wrapProps }) => {
     formState: { errors },
   } = useFormContext();
 
-  const defaultValue = presetValue ?? options.find((i) => i.isSelected)?.value;
+  let defaultValue =
+    presetValue ||
+    fieldDefaultValue ||
+    options.find((i) => i.isSelected)?.value;
+
+  if (isMultiselectField) defaultValue = defaultValue?.split(",");
 
   return (
     <InputWrapper
@@ -77,9 +84,9 @@ const Select = ({ presetValue, fieldData, name, ...wrapProps }) => {
           id={name}
           name={name}
           {...register(name, {
-            required: isRequired && strings.errors.required,
+            required: isRequired && (errorMessage || strings.errors.required),
           })}
-          defaultValue={isMultiselectField ? [defaultValue] : defaultValue}
+          defaultValue={defaultValue}
         >
           {options.map(({ text, value, className }, index) => {
             return (
@@ -101,11 +108,17 @@ export default Select;
 
 Select.propTypes = {
   presetValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.string,
   fieldData: PropTypes.shape({
     choices: PropTypes.array,
     cssClass: PropTypes.string,
     isRequired: PropTypes.bool,
     size: PropTypes.string,
+    placeholder: PropTypes.string,
+    hasEnhancedUI: PropTypes.bool,
+    errorMessage: PropTypes.string,
+    type: PropTypes.string,
+    defaultValue: PropTypes.string,
   }),
   register: PropTypes.func,
   wrapProps: PropTypes.object,
